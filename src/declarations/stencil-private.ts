@@ -1502,7 +1502,7 @@ export interface RenderNode extends HostElement {
 
   /**
    * Is a slot reference node:
-   * This is a node that represents where a slots
+   * This is a node that represents where a slot
    * was originally located.
    */
   ['s-sr']?: boolean;
@@ -1629,6 +1629,9 @@ export interface ModeBundleIds {
 
 export type RuntimeRef = HostElement | {};
 
+/**
+ * Interface used to track an Element, it's virtual Node (`VNode`), and other data
+ */
 export interface HostRef {
   $ancestorComponent$?: HostElement;
   $flags$: number;

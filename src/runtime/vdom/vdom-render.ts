@@ -71,21 +71,9 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
       isSvgMode = newVNode.$tag$ === 'svg';
     }
     // create element
-    elm = newVNode.$elm$ = (
-      BUILD.svg
-        ? doc.createElementNS(
-            isSvgMode ? SVG_NS : HTML_NS,
-            BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback
-              ? 'slot-fb'
-              : (newVNode.$tag$ as string)
-          )
-        : doc.createElement(
-            BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback
-              ? 'slot-fb'
-              : (newVNode.$tag$ as string)
-          )
-    ) as any;
-
+    elm = newVNode.$elm$ = (BUILD.svg
+      ? doc.createElementNS(isSvgMode ? SVG_NS : HTML_NS, BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback ? 'slot-fb' : (newVNode.$tag$ as string))
+      : doc.createElement(BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback ? 'slot-fb' : (newVNode.$tag$ as string))) as any;
     if (BUILD.svg && isSvgMode && newVNode.$tag$ === 'foreignObject') {
       isSvgMode = false;
     }
@@ -104,7 +92,6 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
       for (i = 0; i < newVNode.$children$.length; ++i) {
         // create the node
         childNode = createElm(oldParentVNode, newVNode, i, elm);
-
         // return node could have been null
         if (childNode) {
           // append our new node
@@ -378,7 +365,6 @@ export const patch = (oldVNode: d.VNode, newVNode: d.VNode) => {
     }
 
     // element node
-
     if (BUILD.vdomAttribute || BUILD.reflect) {
       if (BUILD.slot && tag === 'slot') {
         // minifier will clean this up
@@ -585,8 +571,7 @@ export const renderVdom = (hostRef: d.HostRef, renderFnResults: d.VNode | d.VNod
   const hostElm = hostRef.$hostElement$;
   const cmpMeta = hostRef.$cmpMeta$;
   const oldVNode: d.VNode = hostRef.$vnode$ || newVNode(null, null);
-  const rootVnode = isHost(renderFnResults) ? renderFnResults : h(null, null, renderFnResults as any);
-
+  const rootVnode: d.VNode = isHost(renderFnResults) ? renderFnResults : h(null, null, renderFnResults as any);
   hostTagName = hostElm.tagName;
 
   // <Host> runtime check
@@ -726,10 +711,9 @@ render() {
 
 // slot comment debug nodes only created with the `--debug` flag
 // otherwise these nodes are text nodes w/out content
-const slotReferenceDebugNode = (slotVNode: d.VNode) =>
-  doc.createComment(
-    `<slot${slotVNode.$name$ ? ' name="' + slotVNode.$name$ + '"' : ''}> (host=${hostTagName.toLowerCase()})`
-  );
+const slotReferenceDebugNode = (slotVNode: d.VNode) => {
+  return doc.createComment(`<slot${slotVNode.$name$ ? ' name="' + slotVNode.$name$ + '"' : ''}> (host=${hostTagName.toLowerCase()})`)
+};
 
 const originalLocationDebugNode = (nodeToRelocate: d.RenderNode): any =>
   doc.createComment(

@@ -32,9 +32,10 @@ export const scheduleUpdate = (hostRef: d.HostRef, isInitialLoad: boolean) => {
 };
 
 const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean) => {
-  const elm = hostRef.$hostElement$;
+  const elm: d.HostElement = hostRef.$hostElement$;
   const endSchedule = createTime('scheduleUpdate', hostRef.$cmpMeta$.$tagName$);
-  const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$ : (elm as any);
+  // TODO: How the heck does this work for `safeCall`?
+  const instance: d.ComponentInterface | d.HostElement = BUILD.lazyLoad ? hostRef.$lazyInstance$ : elm;
 
   let promise: Promise<void>;
   if (isInitialLoad) {
@@ -45,6 +46,7 @@ const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean) => {
         hostRef.$queuedListeners$ = null;
       }
     }
+    // TODO: I don't think the type of the instance can fundamentally change here
     emitLifecycleEvent(elm, 'componentWillLoad');
     if (BUILD.cmpWillLoad) {
       promise = safeCall(instance, 'componentWillLoad');
@@ -66,9 +68,9 @@ const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean) => {
   return then(promise, () => updateComponent(hostRef, instance, isInitialLoad));
 };
 
-const updateComponent = async (hostRef: d.HostRef, instance: any, isInitialLoad: boolean) => {
+const updateComponent = async (hostRef: d.HostRef, instance: d.ComponentInterface | d.HostElement, isInitialLoad: boolean) => {
   // updateComponent
-  const elm = hostRef.$hostElement$ as d.RenderNode;
+  const elm: d.RenderNode = hostRef.$hostElement$;
   const endUpdate = createTime('update', hostRef.$cmpMeta$.$tagName$);
   const rc = elm['s-rc'];
   if (BUILD.style && isInitialLoad) {
@@ -140,6 +142,7 @@ const updateComponent = async (hostRef: d.HostRef, instance: any, isInitialLoad:
 
 let renderingRef: any = null;
 
+// TODO: These types?
 const callRender = (hostRef: d.HostRef, instance: any, elm: HTMLElement) => {
   // in order for bundlers to correctly treeshake the BUILD object
   // we need to ensure BUILD is not deoptimized within a try/catch
