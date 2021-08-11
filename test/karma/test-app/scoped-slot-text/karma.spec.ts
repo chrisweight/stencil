@@ -13,20 +13,22 @@ describe('scoped-slot-text', () => {
   /**
    * Helper function to validate that the `HTMLLabelElement` used in this test suite:
    * 1. Exists and can be found by querying the DOM
-   * 2. Has the structure that we intend it to
-   *
+   * 2. Has the number of children we expect it to
    * @returns the validated label
    */
-  function validateAndGetLabel(): HTMLLabelElement {
-    if (!app) {
-      fail('The root application has not been defined. Did you forget to call `setupDom()`?');
-    }
-
+  function getCmpLabelCustomElement(): HTMLCmpLabelElement {
     const cmpLabelComponent: HTMLCmpLabelElement = app.querySelector('cmp-label');
     expect(cmpLabelComponent).toBeDefined();
 
+    return cmpLabelComponent;
+  }
+
+  it('leaves the structure of the label intact', () => {
+    const cmpLabelComponent: HTMLCmpLabelElement = getCmpLabelCustomElement();
+
+    cmpLabelComponent.textContent = 'New text';
+
     const label: HTMLLabelElement = cmpLabelComponent.querySelector('label');
-    expect(label).toBeDefined();
 
     /**
      * Expect three child nodes in the label
@@ -34,36 +36,24 @@ describe('scoped-slot-text', () => {
      * - the slotted text node
      * - the non-slotted text
      */
+    expect(label).toBeDefined();
     expect(label.childNodes.length).toBe(3);
+  });
 
-    return label;
-  }
-
-  // it('renders text as if there were a slot available', async () => {
-  //   const label = validateAndGetLabel();
-  //   expect(label.childNodes[1].textContent).toBe("This text should go in a slot");
-  // });
-  //
-  // it('renders non-slotted text', () => {
-  //   const label = validateAndGetLabel();
-  //   expect(label.childNodes[2].textContent).toBe("Non-slotted text");
-  // });
-
-  it("doesn't override all children when assigning textContent", () => {
-    const cmpLabelComponent: HTMLCmpLabelElement = app.querySelector('cmp-label');
-    expect(cmpLabelComponent).toBeDefined();
+  it('sets the textContent in the slot-like location', () => {
+    const cmpLabelComponent: HTMLCmpLabelElement = getCmpLabelCustomElement();
 
     cmpLabelComponent.textContent = 'New text';
-    console.log(cmpLabelComponent.childNodes);
 
-    /**
-     * Expect three child nodes in the label
-     * - a content reference text node
-     * - the slotted text node with the new text
-     * - the non-slotted text
-     */
-    expect(cmpLabelComponent.childNodes.length).toBe(3);
-    expect(cmpLabelComponent.childNodes[2].textContent).toBe('New textThis text should go in a slot');
-    expect(cmpLabelComponent.childNodes[3].textContent).toBe('Non-slotted text');
+    expect(cmpLabelComponent.textContent).toBe('New text');
+  });
+
+  it("doesn't override all children when assigning textContent", () => {
+    const cmpLabelComponent: HTMLCmpLabelElement = getCmpLabelCustomElement();
+
+    cmpLabelComponent.textContent = 'New text';
+
+    const divElement: HTMLDivElement = cmpLabelComponent.querySelector('div');
+    expect(divElement?.textContent).toBe('Non-slotted text');
   });
 });
