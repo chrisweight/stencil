@@ -11,24 +11,26 @@ describe('scoped-slot-text', () => {
   afterEach(tearDownDom);
 
   /**
-   * Helper function to validate that the `HTMLLabelElement` used in this test suite:
-   * 1. Exists and can be found by querying the DOM
-   * 2. Has the number of children we expect it to
-   * @returns the validated label
+   * Helper function to retrieve custom element used by this test suite. If the element cannot be found, the test that
+   * invoked this function shall fail.
+   * @returns the custom element
    */
-  function getCmpLabelCustomElement(): HTMLCmpLabelElement {
-    const cmpLabelComponent: HTMLCmpLabelElement = app.querySelector('cmp-label');
-    expect(cmpLabelComponent).toBeDefined();
+  function getCmpLabel(): HTMLCmpLabelElement {
+    const customElementSelector = 'cmp-label';
+    const cmpLabel: HTMLCmpLabelElement = app.querySelector(customElementSelector);
+    if (!cmpLabel) {
+      fail(`Unable to find element using query selector '${customElementSelector}'`);
+    }
 
-    return cmpLabelComponent;
+    return cmpLabel;
   }
 
   it('leaves the structure of the label intact', () => {
-    const cmpLabelComponent: HTMLCmpLabelElement = getCmpLabelCustomElement();
+    const cmpLabel: HTMLCmpLabelElement = getCmpLabel();
 
-    cmpLabelComponent.textContent = 'New text';
+    cmpLabel.textContent = 'New text for label structure testing';
 
-    const label: HTMLLabelElement = cmpLabelComponent.querySelector('label');
+    const label: HTMLLabelElement = cmpLabel.querySelector('label');
 
     /**
      * Expect three child nodes in the label
@@ -41,19 +43,19 @@ describe('scoped-slot-text', () => {
   });
 
   it('sets the textContent in the slot-like location', () => {
-    const cmpLabelComponent: HTMLCmpLabelElement = getCmpLabelCustomElement();
+    const cmpLabel: HTMLCmpLabelElement = getCmpLabel();
 
-    cmpLabelComponent.textContent = 'New text';
+    cmpLabel.textContent = 'New text to go in the slot';
 
-    expect(cmpLabelComponent.textContent).toBe('New text');
+    expect(cmpLabel.textContent).toBe('New text to go in the slot');
   });
 
   it("doesn't override all children when assigning textContent", () => {
-    const cmpLabelComponent: HTMLCmpLabelElement = getCmpLabelCustomElement();
+    const cmpLabel: HTMLCmpLabelElement = getCmpLabel();
 
-    cmpLabelComponent.textContent = 'New text';
+    cmpLabel.textContent = "New text that we want to go in a slot, but don't care about for this test";
 
-    const divElement: HTMLDivElement = cmpLabelComponent.querySelector('div');
+    const divElement: HTMLDivElement = cmpLabel.querySelector('div');
     expect(divElement?.textContent).toBe('Non-slotted text');
   });
 });
