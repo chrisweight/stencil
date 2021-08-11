@@ -14,7 +14,21 @@ export const patchCloneNode = (HostElementPrototype: any) => {
     if (BUILD.slot && !isShadowDom && deep) {
       let i = 0;
       let slotted, nonStencilNode;
-      let stencilPrivates = ['s-id', 's-cr', 's-lr', 's-rc', 's-sc', 's-p', 's-cn', 's-sr', 's-sn', 's-hn', 's-ol', 's-nr', 's-si'];
+      let stencilPrivates = [
+        's-id',
+        's-cr',
+        's-lr',
+        's-rc',
+        's-sc',
+        's-p',
+        's-cn',
+        's-sr',
+        's-sn',
+        's-hn',
+        's-ol',
+        's-nr',
+        's-si',
+      ];
 
       for (; i < srcNode.childNodes.length; i++) {
         slotted = (srcNode.childNodes[i] as any)['s-nr'];
@@ -62,10 +76,10 @@ export const patchTextContent = (HostElementPrototype: HTMLElement): void => {
       const slotNode = getHostSlotNode(this.childNodes, '');
       console.log('GET: got slotNode', JSON.stringify(slotNode, null, 2));
       if (slotNode) {
-        console.log('text content is ', slotNode.textContent)
+        console.log('text content is ', slotNode.textContent);
         return slotNode.nextSibling?.textContent;
       } else {
-        console.log('__text content is ', this.__textContent)
+        console.log('__text content is ', this.__textContent);
         return this.__textContent;
       }
     },
@@ -78,7 +92,7 @@ export const patchTextContent = (HostElementPrototype: HTMLElement): void => {
         console.log('SET: value', JSON.stringify(slotNode, null, 2));
         // this.__textContent = value;
         // this.textContent = '';
-        console.log('did we get s-cr on',JSON.stringify(slotNode.textContent, null, 2))
+        console.log('did we get s-cr on', JSON.stringify(slotNode.textContent, null, 2));
         if (slotNode.nextSibling) {
           slotNode.nextSibling.textContent = value;
         }
@@ -89,17 +103,17 @@ export const patchTextContent = (HostElementPrototype: HTMLElement): void => {
           // slotNode.insertBefore(contentRefElm, slotNode.firstChild);
         }
       } else {
-        console.log('SET: No this is not right. Value is', value)
+        console.log('SET: No this is not right. Value is', value);
         this.__textContent = value;
         const contentRefElm: d.RenderNode = this['s-cr'];
-        console.log('got s-cr on',JSON.stringify(this, null, 2))
+        console.log('got s-cr on', JSON.stringify(this, null, 2));
         if (contentRefElm) {
           // reset the node
           contentRefElm.textContent = '';
           this.insertBefore(contentRefElm, this.firstChild);
         }
       }
-    }
+    },
   });
 };
 
@@ -161,15 +175,15 @@ const getHostSlotNode = (childNodes: NodeListOf<ChildNode>, slotName: string) =>
 
   for (; i < childNodes.length; i++) {
     childNode = childNodes[i] as any;
-    console.log('looking at child node ', i)
+    console.log('looking at child node ', i);
     if (childNode['s-sr'] && childNode['s-sn'] === slotName) {
-      console.log('found one', childNode)
+      console.log('found one', childNode);
       return childNode;
     }
-  console.log('recursing on ', childNode)
+    console.log('recursing on ', childNode);
     childNode = getHostSlotNode(childNode.childNodes, slotName);
     if (childNode) {
-      console.log('found two', childNode)
+      console.log('found two', childNode);
       return childNode;
     }
   }

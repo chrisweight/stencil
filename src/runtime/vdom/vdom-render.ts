@@ -71,9 +71,20 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
       isSvgMode = newVNode.$tag$ === 'svg';
     }
     // create element
-    elm = newVNode.$elm$ = (BUILD.svg
-      ? doc.createElementNS(isSvgMode ? SVG_NS : HTML_NS, BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback ? 'slot-fb' : (newVNode.$tag$ as string))
-      : doc.createElement(BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback ? 'slot-fb' : (newVNode.$tag$ as string))) as any;
+    elm = newVNode.$elm$ = (
+      BUILD.svg
+        ? doc.createElementNS(
+            isSvgMode ? SVG_NS : HTML_NS,
+            BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback
+              ? 'slot-fb'
+              : (newVNode.$tag$ as string)
+          )
+        : doc.createElement(
+            BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotFallback
+              ? 'slot-fb'
+              : (newVNode.$tag$ as string)
+          )
+    ) as any;
     if (BUILD.svg && isSvgMode && newVNode.$tag$ === 'foreignObject') {
       isSvgMode = false;
     }
@@ -712,7 +723,9 @@ render() {
 // slot comment debug nodes only created with the `--debug` flag
 // otherwise these nodes are text nodes w/out content
 const slotReferenceDebugNode = (slotVNode: d.VNode) => {
-  return doc.createComment(`<slot${slotVNode.$name$ ? ' name="' + slotVNode.$name$ + '"' : ''}> (host=${hostTagName.toLowerCase()})`)
+  return doc.createComment(
+    `<slot${slotVNode.$name$ ? ' name="' + slotVNode.$name$ + '"' : ''}> (host=${hostTagName.toLowerCase()})`
+  );
 };
 
 const originalLocationDebugNode = (nodeToRelocate: d.RenderNode): any =>

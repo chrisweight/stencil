@@ -68,7 +68,11 @@ const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean) => {
   return then(promise, () => updateComponent(hostRef, instance, isInitialLoad));
 };
 
-const updateComponent = async (hostRef: d.HostRef, instance: d.ComponentInterface | d.HostElement, isInitialLoad: boolean) => {
+const updateComponent = async (
+  hostRef: d.HostRef,
+  instance: d.ComponentInterface | d.HostElement,
+  isInitialLoad: boolean
+) => {
   // updateComponent
   const elm: d.RenderNode = hostRef.$hostElement$;
   const endUpdate = createTime('update', hostRef.$cmpMeta$.$tagName$);

@@ -18,7 +18,7 @@ describe('scoped-slot-text', () => {
    * @returns the validated label
    */
   function validateAndGetLabel(): HTMLLabelElement {
-    if(!app) {
+    if (!app) {
       fail('The root application has not been defined. Did you forget to call `setupDom()`?');
     }
 
@@ -53,8 +53,8 @@ describe('scoped-slot-text', () => {
     const cmpLabelComponent: HTMLCmpLabelElement = app.querySelector('cmp-label');
     expect(cmpLabelComponent).toBeDefined();
 
-    cmpLabelComponent.textContent = "New text";
-    console.log(cmpLabelComponent.childNodes)
+    cmpLabelComponent.textContent = 'New text';
+    console.log(cmpLabelComponent.childNodes);
 
     /**
      * Expect three child nodes in the label
@@ -63,7 +63,7 @@ describe('scoped-slot-text', () => {
      * - the non-slotted text
      */
     expect(cmpLabelComponent.childNodes.length).toBe(3);
-    expect(cmpLabelComponent.childNodes[2].textContent).toBe("New textThis text should go in a slot");
-    expect(cmpLabelComponent.childNodes[3].textContent).toBe("Non-slotted text");
+    expect(cmpLabelComponent.childNodes[2].textContent).toBe('New textThis text should go in a slot');
+    expect(cmpLabelComponent.childNodes[3].textContent).toBe('Non-slotted text');
   });
 });
