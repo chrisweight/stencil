@@ -1,5 +1,5 @@
-import * as d from '../../declarations';
-import { patchTextContent } from '../dom-extras';
+// import * as d from '../../declarations';
+// import { patchTextContent } from '../dom-extras';
 
 // describe('dom-extras', () => {
 //   describe('patchTextContent', () => {
