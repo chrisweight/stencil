@@ -140,7 +140,7 @@ export const bootstrapLazy = (lazyBundles: d.LazyBundlesRuntimeData, options: d.
         patchSlotAppendChild(HostElement.prototype);
       }
 
-      patchTextContent(HostElement.prototype);
+      patchTextContent(HostElement.prototype, cmpMeta);
 
       if (BUILD.hotModuleReplacement) {
         (HostElement as any).prototype['s-hmr'] = function (hmrVersionId: string) {
