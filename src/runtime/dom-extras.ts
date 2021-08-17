@@ -64,11 +64,10 @@ export const patchSlotAppendChild = (HostElementPrototype: any) => {
 };
 
 /**
- * Patches the text content of an unnamed slotted node in a scoped component
+ * Patches the text content of an unnamed slotted node in a scoped component.
  * @param hostElementPrototype the Element to be patched
  */
 export const patchTextContent = (hostElementPrototype: HTMLElement, _cmpMeta: d.ComponentRuntimeMeta): void => {
-
   // if ((cmpMeta.$flags$ & CMP_FLAGS.scopedCssEncapsulation) === 0) {
     // console.log(hostElementPrototype);
     const descriptor = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
@@ -79,22 +78,26 @@ export const patchTextContent = (hostElementPrototype: HTMLElement, _cmpMeta: d.
     Object.defineProperty(hostElementPrototype, '__textContent', descriptor);
 
     Object.defineProperty(hostElementPrototype, 'textContent', {
+      // TODO: If we don't patch this with any more complex logic, then rm it
+      // but something may come of this after we `set` so.....
       get(): string | null {
-        const slotNode = getHostSlotNode(this.childNodes, '');
-        if (slotNode) {
-          return slotNode.nextSibling?.textContent;
-        } else {
-          return this.__textContent;
-        }
+        // const slotNode = getHostSlotNode(this.childNodes, '');
+        // if (slotNode) {
+        //   return slotNode.textContent;
+        // } else {
+        //   return this.__textContent;
+        // }
+        return this.__textContent;
       },
 
       set(value: string | null) {
         const slotNode = getHostSlotNode(this.childNodes, '');
         // console.log('here is the slot node that I found', JSON.stringify(slotNode, null, 2));
         if (slotNode) {
-          if (slotNode.nextSibling) {
-            slotNode.nextSibling.textContent = value;
-          }
+          // if (slotNode.nextSibling) {
+          //   slotNode.nextSibling.textContent = value;
+          // }
+          slotNode.textContent = value;
           const contentRefElm: d.RenderNode = slotNode['s-cr'];
           if (contentRefElm) {
             // reset the node
@@ -108,7 +111,7 @@ export const patchTextContent = (hostElementPrototype: HTMLElement, _cmpMeta: d.
           // console.log('got s-cr on', JSON.stringify(this, null, 2));
           if (contentRefElm) {
             // reset the node
-            contentRefElm.textContent = '';
+            // contentRefElm.textContent = '';
             this.insertBefore(contentRefElm, this.firstChild);
           }
         }
@@ -175,15 +178,15 @@ const getHostSlotNode = (childNodes: NodeListOf<ChildNode>, slotName: string) =>
 
   for (; i < childNodes.length; i++) {
     childNode = childNodes[i] as any;
-    console.log('looking at child node ', i);
+    // console.log('looking at child node ', i);
     if (childNode['s-sr'] && childNode['s-sn'] === slotName) {
-      console.log('found one', childNode);
+      // console.log('found one', childNode);
       return childNode;
     }
-    console.log('recursing on ', childNode);
+    // console.log('recursing on ', childNode);
     childNode = getHostSlotNode(childNode.childNodes, slotName);
     if (childNode) {
-      console.log('found two', childNode);
+      // console.log('found two', childNode);
       return childNode;
     }
   }
