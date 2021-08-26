@@ -197,10 +197,16 @@ export interface RollupResults {
 export interface BuildCtx {
   buildId: number;
   buildResults: CompilerBuildResults;
+  buildStats?: CompilerBuildStats;
   buildMessages: string[];
   bundleBuildCount: number;
   collections: Collection[];
   compilerCtx: CompilerCtx;
+  esmBrowserComponentBundle: BundleModule[];
+  esmComponentBundle: BundleModule[];
+  es5ComponentBundle: BundleModule[];
+  systemComponentBundle: BundleModule[];
+  commonJsComponentBundle: BundleModule[];
   components: ComponentCompilerMeta[];
   componentGraph: Map<string, string[]>;
   config: Config;
@@ -260,7 +266,8 @@ export type BuildTask = any;
 
 export type BuildStatus = 'pending' | 'error' | 'disabled' | 'default';
 
-export interface BuildStats {
+export interface CompilerBuildStats {
+  timestamp: string;
   compiler: {
     name: string;
     version: string;
@@ -271,14 +278,20 @@ export interface BuildStats {
     components: number;
     entries: number;
     bundles: number;
+    outputs: any;
   };
   options: {
     minifyJs: boolean;
     minifyCss: boolean;
     hashFileNames: boolean;
     hashedFileNameLength: number;
-    buildEs5: boolean;
+    buildEs5: boolean | 'prod';
   };
+  esmBrowser: any;
+  esm: any;
+  es5: any;
+  system: any;
+  commonjs: any;
   components: BuildComponent[];
   entries: BuildEntry[];
   rollupResults: RollupResults;
