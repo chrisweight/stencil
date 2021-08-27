@@ -30,10 +30,10 @@ export const outputLazy = async (config: d.Config, compilerCtx: d.CompilerCtx, b
     return;
   }
 
-  const timespan = buildCtx.createTimeSpan(`generate lazy${config.sourceMap ? ' + source maps' : ''} started`);
+  const bundleEventMessage = `generate lazy${config.sourceMap ? ' + source maps' : ''}`;
+  const timespan = buildCtx.createTimeSpan(`${bundleEventMessage} started`);
 
   try {
-    // const criticalBundles = getCriticalPath(buildCtx);
     const bundleOpts: BundleOptions = {
       id: 'lazy',
       platform: 'client',
@@ -75,7 +75,7 @@ export const outputLazy = async (config: d.Config, compilerCtx: d.CompilerCtx, b
     catchError(buildCtx.diagnostics, e);
   }
 
-  timespan.finish(`generate lazy${config.sourceMap ? ' + source maps' : ''} finished`);
+  timespan.finish(`${bundleEventMessage} finished`);
 };
 
 const getLazyCustomTransformer = (config: d.Config, compilerCtx: d.CompilerCtx) => {

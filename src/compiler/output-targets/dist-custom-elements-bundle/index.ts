@@ -32,13 +32,12 @@ export const outputCustomElementsBundle = async (
     return;
   }
 
-  const timespan = buildCtx.createTimeSpan(
-    `generate custom elements bundle${config.sourceMap ? ' + source maps' : ''} started`
-  );
+  const bundlingEventMessage = `generate custom elements bundle${config.sourceMap ? ' + source maps' : ''}`;
+  const timespan = buildCtx.createTimeSpan(`${bundlingEventMessage} started`);
 
   await Promise.all(outputTargets.map((o) => bundleCustomElements(config, compilerCtx, buildCtx, o)));
 
-  timespan.finish(`generate custom elements bundle${config.sourceMap ? ' + source maps' : ''} finished`);
+  timespan.finish(`${bundlingEventMessage} finished`);
 };
 
 const bundleCustomElements = async (
